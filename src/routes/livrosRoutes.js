@@ -1,5 +1,17 @@
 import express from "express";
-import {createNewLivro, listarLivros} from "../controllers/livrosController.js";
+import multer from "multer";
+import {createNewLivro, listarLivros, uploadFile} from "../controllers/livrosController.js";
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+  
+const upload = multer({ storage: storage });
 
 const router = (app) => {
     app.use(express.json());
@@ -7,6 +19,8 @@ const router = (app) => {
     app.get("/livros", listarLivros);
 
     app.post("/livros", createNewLivro);
+
+    app.post("/livros/upload", upload.single('imagem'), uploadFile);
 
     function buscarLivroPorID(id){
         return livros.findIndex((livro) => {
