@@ -7,3 +7,9 @@ export async function getAllLivros() {
     const colecao = db.collection("livros");
     return colecao.find().toArray();
 }
+
+export async function createLivro(livro) {
+    const db = conexao.db("imersaodev");
+    const colecao = db.collection("livros");
+    return colecao.insertOne(livro);
+}

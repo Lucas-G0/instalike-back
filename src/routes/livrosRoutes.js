@@ -1,10 +1,12 @@
 import express from "express";
-import {listarLivros} from "../controllers/livrosController.js";
+import {createNewLivro, listarLivros} from "../controllers/livrosController.js";
 
 const router = (app) => {
     app.use(express.json());
 
     app.get("/livros", listarLivros);
+
+    app.post("/livros", createNewLivro);
 
     function buscarLivroPorID(id){
         return livros.findIndex((livro) => {
