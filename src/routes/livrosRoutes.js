@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import {createNewLivro, listarLivros, uploadFile} from "../controllers/livrosController.js";
+import {createNewLivro, listarLivros, uploadFile, updateNewLivro, findLivroById} from "../controllers/livrosController.js";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -22,16 +22,9 @@ const router = (app) => {
 
     app.post("/livros/upload", upload.single('imagem'), uploadFile);
 
-    function buscarLivroPorID(id){
-        return livros.findIndex((livro) => {
-            return livro.id === Number(id);
-        });
-    };
+    app.put("/livros/upload/:id", updateNewLivro);
 
-    app.get("/livros/:id", (req, res) => {
-        const index = buscarLivroPorID(req.params.id);
-        res.status(200).json(livros[index]);
-    });
+    app.get("/livros/:id", findLivroById);
 }
 
 export default router;
