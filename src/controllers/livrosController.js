@@ -1,5 +1,6 @@
 import fs from "fs";
-import {getAllLivros, createLivro} from '../models/livrosModel.js';
+import {getAllLivros, createLivro, updateLivro, buscarLivroPorID} from '../models/livrosModel.js';
+import gerarDescricaoComGemini from "../services/geminiService.js";
 
 export async function listarLivros(req, res) 
 {
@@ -39,4 +40,34 @@ export async function uploadFile(req, res)
         console.error(erro.message);
         res.status(500).json({"Erro:":" Houve um erro ao tentar criar um novo livro."});
     }
+}
+
+export async function updateNewLivro(req, res)
+{
+    const id = req.params.id;
+    try {
+        const imgUrl = `http://localhost:3000/uploads/${id}.jpeg`;
+        const imgBuffer = fs.readFileSync(`uploads/${id}.jpeg`);
+        const descricao = await gerarDescricaoComGemini(imgBuffer);
+        const novoLivro = {
+            titulo: req.body.titulo,
+            descricao: descricao,
+            autor: req.body.autor,
+            ano: req.body.ano,
+            genero: req.body.genero,
+            imgUrl: imgUrl,
+            alt: req.body.alt
+        };
+        const livro = await updateLivro(id, novoLivro);
+        res.status(201).json(livro);
+    } catch (erro){
+        console.error(erro.message);
+        res.status(500).json({"Erro:":" Houve um erro ao tentar criar um novo livro."});
+    }
+}
+
+export async function findLivroById(req, res)
+{
+    const livro = buscarLivroPorID(req.params.id);
+    res.status(200).json(livro);
 }
