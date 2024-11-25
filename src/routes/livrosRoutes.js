@@ -1,6 +1,12 @@
 import express from "express";
 import multer from "multer";
+import cors from "cors";
 import {createNewLivro, listarLivros, uploadFile, updateNewLivro, findLivroById} from "../controllers/livrosController.js";
+
+const corsOptions = {
+  origin: "http://localhost:8000",
+  optionsSuccessStatus: 200
+};
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,6 +21,7 @@ const upload = multer({ storage: storage });
 
 const router = (app) => {
     app.use(express.json());
+    app.use(cors(corsOptions));
 
     app.get("/livros", listarLivros);
 
