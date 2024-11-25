@@ -45,8 +45,8 @@ export async function uploadFile(req, res)
 export async function updateNewLivro(req, res)
 {
     const id = req.params.id;
+    const imgUrl = `http://localhost:3000/uploads/${id}.jpeg`;
     try {
-        const imgUrl = `http://localhost:3000/uploads/${id}.jpeg`;
         const imgBuffer = fs.readFileSync(`uploads/${id}.jpeg`);
         const descricao = await gerarDescricaoComGemini(imgBuffer);
         const novoLivro = {
